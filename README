@@ -1,0 +1,78 @@
+  PACFORGE
+~~~~~~~~~~~~~
+
+pacforge is a podman-compatible task-temporary container image and set of
+scripts to build an Arch Linux package straight from a PKGBUILD file found in
+the running directory, using a possibly customized makepkg.conf indicated at
+container build time.
+
+Dependencies listed in the PKGBUILD are installed automatically and unattended
+before the build runs. The tooling is meant to be generic and reusable for any
+PKGBUILD, not tied to a single package.
+
+ 1. MOTIVATION
+---------------
+
+The initial use case driving this project is building coccinelle. The AUR
+package for coccinelle currently depends on a long chain of AUR makedepends
+whose build scripts do not build reliably.
+
+pacforge's first concrete target is an adapted PKGBUILD for coccinelle that
+resolves dependencies through opam instead, in order to bypass that broken AUR
+makedepends chain entirely.
+
+The problem should work for building any PKGBUID, however, and will be
+maintained to be used with that in mind, since this is a constantly recurring
+task for me.
+
+ 2. CONTENTS
+-------------
+
+makepkg-autobuild.sh:
+	POSIX sh script that parses a PKGBUILD's dependency arrays, installs
+	each dependency one at a time via pacman unattended, and then invokes makepkg. 
+
+Dockerfile:
+	podman-compatible Arch Linux image definition that installs
+	makepkg-autobuild.sh and marks the image as an intended pacforge build
+	container.
+
+ 3. USAGE
+----------
+
+Build the container image, mount a directory containing a PKGBUILD (and,
+optionally, a makepkg.conf) into it, and run makepkg-autobuild.sh inside the
+container. Any arguments given to the script are forwarded to makepkg
+unchanged.
+
+ 4. REPORTING BUGS
+-------------------
+
+Bugs and improvement suggestions are welcome. Open an issue at:
+https://todo.sr.ht/~devlavender/arch-aur-contribs
+
+ 5. STATUS
+-----------
+Early development. The dependency-install script exists; the Dockerfile and the
+coccinelle/opam PKGBUILD are not written yet.
+
+ 6. AUTHOR
+-----------
+Agatha Isabelle Moreira <code AT agatha PERIOD dev>
+
+ 7. LICENSE
+------------
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along
+with this program. If not, see <https://www.gnu.org/licenses/agpl-3.0.txt>.
+
+A copy of the license is also provided in the file named LICENSE distributed
+with the source code.
