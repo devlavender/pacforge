@@ -34,7 +34,9 @@ set -eu
 
 BUILD="PKGBUILD"
 CONF="${PWD}/makepkg.conf"
+RUNUID="$(id -u)"
 PACMAN=""
+MAKEPKG=""
 
 # is_archbuild_container - guard against running on a stray host system.
 #
@@ -78,17 +80,41 @@ check_build_exists()
         return 0
 }
 
-# determine_pacman_cmd - decide how pacman should be invoked so the
-# whole run stays non-interactive. Sets the global PACMAN variable.
-# "sudo -n" fails instead of prompting for a password when not root.
-determine_pacman_cmd()
+# makepkg_setup - call the setup functions
+makepkg_setup()
 {
-        if [ "$(id -u)" -eq 0 ]; then
+        permission_setup
+}
+
+# permission_setup - decide how commands should be evoked and adjust
+# proper permissions to the working dir.
+permission_setup()
+{
+        if [ "${RUNUID}" -eq 0 ]; then
                 PACMAN="pacman"
+		MAKEPKG="sudo -u builder makepkg"
+		chown builder .
         else
                 PACMAN="sudo pacman"
+		MAKEPKG="makepkg"
+		sudo chown builder .
         fi
 }
+
+# makepkg_cleanup - call to the cleanup functions
+makepkg_cleanup()
+{
+        permission_cleanup
+}
+
+# permission_cleanup - cleanup the permissions setup done earlier. It
+# assumes `root` in the container is mapped to the UID of the user
+# running the container on the host.
+permission_cleanup()
+{
+        sudo chown root .
+}
+
 
 # extract_deps - print the raw, unparsed contents of depends()/
 # makedepends() arrays from ${BUILD}, one array-content chunk per
@@ -160,9 +186,11 @@ install_dependencies()
 run_makepkg()
 {
         if [ -f "${CONF}" ]; then
-                exec makepkg --config "${CONF}" "${@}"
+                # shellcheck disable=SC2086
+                ${MAKEPKG} --config "${CONF}" "${@}"
         else
-                exec makepkg "${@}"
+                # shellcheck disable=SC2086
+                ${MAKEPKG} "${@}"
         fi
 }
 
@@ -170,9 +198,10 @@ main()
 {
         is_archbuild_container
         check_build_exists
-        determine_pacman_cmd
+        makepkg_setup	
         install_dependencies
         run_makepkg "${@}"
+	makepkg_cleanup
 }
 
 main "${@}"
