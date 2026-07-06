@@ -33,7 +33,7 @@
 set -eu
 
 BUILD="PKGBUILD"
-CONF="makepkg.conf"
+CONF="${PWD}/makepkg.conf"
 PACMAN=""
 
 # is_archbuild_container - guard against running on a stray host system.
