@@ -1,5 +1,6 @@
+=============
   PACFORGE
-~~~~~~~~~~~~~
+=============
 
 pacforge is a podman-compatible task-temporary container image and set of
 scripts to build an Arch Linux package straight from a PKGBUILD file found in
@@ -11,7 +12,7 @@ before the build runs. The tooling is meant to be generic and reusable for any
 PKGBUILD, not tied to a single package.
 
  1. MOTIVATION
----------------
+~~~~~~~~~~~~~~~
 
 The initial use case driving this project is building coccinelle. The AUR
 package for coccinelle currently depends on a long chain of AUR makedepends
@@ -26,7 +27,7 @@ maintained to be used with that in mind, since this is a constantly recurring
 task for me.
 
  2. CONTENTS
--------------
+~~~~~~~~~~~~~
 
 makepkg-autobuild.sh:
 	POSIX sh script that parses a PKGBUILD's dependency arrays, installs
@@ -38,7 +39,7 @@ Dockerfile:
 	container.
 
  3. USAGE
-----------
+~~~~~~~~~~
 
 The use requires 3 steps: 1) optionally, tune the build options; 2) build the
 container image; and 3) run the container from the directory with the PKGBUILD
@@ -72,24 +73,25 @@ If a `makepkg.conf` is found at the running directory, it will override the
 container image's default config.
 
  4. REPORTING BUGS
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 Bugs and improvement suggestions are welcome. Open an issue at:
 https://todo.sr.ht/~devlavender/arch-aur-contribs
 
  5. STATUS
------------
+~~~~~~~~~~~
+
 Working; needing improvements:
 - Turn complicated sudoers logic into a COPY operation for the
   `/etc/sudoers.d/builder` file.
 - Cleanup or maybe rewrite that mostly ai weird makepkg-autobuild.sh stuff.
 
  6. AUTHOR
------------
+~~~~~~~~~~~
 Agatha Isabelle Moreira <code AT agatha PERIOD dev>
 
  7. LICENSE
-------------
+~~~~~~~~~~~~
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU Affero General Public License as published by the Free
 Software Foundation, either version 3 of the License, or (at your option) any
