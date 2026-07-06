@@ -40,10 +40,36 @@ Dockerfile:
  3. USAGE
 ----------
 
-Build the container image, mount a directory containing a PKGBUILD (and,
-optionally, a makepkg.conf) into it, and run makepkg-autobuild.sh inside the
-container. Any arguments given to the script are forwarded to makepkg
-unchanged.
+The use requires 3 steps: 1) optionally, tune the build options; 2) build the
+container image; and 3) run the container from the directory with the PKGBUILD
+file.
+
+3.1 Tune the Build Options
+--------------------------
+
+The `makepkg.conf` file contains the file installed at the container's
+`/etc/makepkg.conf`. Theoriginal file is optimized for my own machine and local
+preferences, and unless you have the same machine, they won't work for you.
+
+The `makepkg.conf` file, however, is overriden at the `makepkg-autobuild.sh`
+script (the container's entry-point) if a `makepkg.conf` file is found at the
+running directory, meaning you can replace options easily before building.
+
+3.2 Build the Container Image
+-----------------------------
+
+To build the container image, just type:
+$ podman build -t pacforge:base .
+
+3.3 Run the Container
+---------------------
+
+To run the container image, just `cd` to the directory where your `PKGBUILD`
+file is and then call docker run with:
+$ podman run --rm -it -v .:/workdir:Z pacforge:base
+
+If a `makepkg.conf` is found at the running directory, it will override the
+container image's default config.
 
  4. REPORTING BUGS
 -------------------
