@@ -53,8 +53,10 @@ https://todo.sr.ht/~devlavender/arch-aur-contribs
 
  5. STATUS
 -----------
-Early development. The dependency-install script exists; the Dockerfile and the
-coccinelle/opam PKGBUILD are not written yet.
+Working; needing improvements:
+- Turn complicated sudoers logic into a COPY operation for the
+  `/etc/sudoers.d/builder` file.
+- Cleanup or maybe rewrite that mostly ai weird makepkg-autobuild.sh stuff.
 
  6. AUTHOR
 -----------
