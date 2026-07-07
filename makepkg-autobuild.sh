@@ -8,6 +8,7 @@
 #
 # THIS FILE IS PART OF:
 # pacforge - podman-compatible Arch package build container
+# Project URL: https://sr.ht/~devlavender/pacforge/
 #
 # COPYRIGHT NOTICE:
 #
